@@ -1,28 +1,28 @@
 from dataclasses import dataclass
+from dataclasses import asdict
+import json
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Farmaco:
-    # def __init__(self, sm_field_descrizione_ditta, 
-    #     sm_field_codice_farmaco,
-    #     sm_field_descrizione_farmaco,
-    #     sm_field_tipo_procedura):
-
-    #     self.ditta = sm_field_descrizione_ditta
-    #     self.codice = sm_field_codice_farmaco
-    #     self.descrizione = sm_field_descrizione_farmaco
-    #     self.tipo_procedura = sm_field_tipo_procedura
+    """
+    Classe che rappresenta un farmaco estratto dal sito [AIFA](https://farmaci.agenziafarmaco.gov.it/bancadatifarmaci/).
+    """
+    codice_farmaco: str
+    descrizione_farmaco: str
     ditta: str
-    codice: int
-    descrizione: str
-    tipo_procedura: str
 
-    def fromJSON(sm_field_descrizione_ditta, 
-        sm_field_codice_farmaco,
+    def fromJSON(sm_field_codice_farmaco,
         sm_field_descrizione_farmaco,
-        sm_field_tipo_procedura):
-
-        return Farmaco( sm_field_descrizione_ditta[0], 
-        sm_field_codice_farmaco[0],
+        sm_field_descrizione_ditta):
+        """
+        Crea un oggetto `Farmaco` dal JSON preso dal sito [AIFA](https://farmaci.agenziafarmaco.gov.it/bancadatifarmaci/)
+        """
+        return Farmaco(sm_field_codice_farmaco[0],
         sm_field_descrizione_farmaco[0],
-        sm_field_tipo_procedura[0])
+         sm_field_descrizione_ditta[0])
     
+    def asDict(self):
+        """
+        Resituisce l'oggetto `Farmaco` in formato `dict`
+        """
+        return(asdict(self))

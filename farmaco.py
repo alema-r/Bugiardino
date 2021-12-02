@@ -49,4 +49,4 @@ class Farmaco:
             if not curl(self.url_fi, head=True):
                 self.url_fi = ""
                 self.url_rcp = ""
-    # def addFI()
+    

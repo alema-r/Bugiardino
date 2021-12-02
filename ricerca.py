@@ -2,7 +2,7 @@ import requests
 import json
 import fitz
 from farmaco import Farmaco
-from utils import curl
+from utils import curl, stripBadText
 
 
 def ricerca_farmaco(file, query_farmaco="**"):
@@ -56,39 +56,56 @@ def ricerca_farmaco(file, query_farmaco="**"):
         json.dump([farmaco.asDict() for farmaco in f], fp=outfile, separators=(', ',': '), indent=4)
     
 
-def estrai_pdf(url_fi):
+def estrai_pdf(farmaco):
     """
     Estrae tutte le informazioni dal foglio illustrativo
 
-    `url_fi`: l'url del foglio illustrativo
+    `farmaco`: il `Farmaco` di cui estrarre le informazione del foglio illustrativo 
     """
 
-    pdf = curl(url_fi)
+    pdf = curl(farmaco["url_fi"])
     
-    doc = fitz.open("pdf", pdf)
-    pages = ""
-    for page in doc:
-        pages += page.get_text()
-    print(pages)
+    try:
+        doc = fitz.open("pdf", pdf)
+        pages = ""
+        for page in doc:
+            pages += page.get_text()
+        farmaco['fi'] = pages
+    except RuntimeError:
+        print("runtime error")
 
     
 def main():
-    # Ricerca di tutti i farmaci
-    ricerca_farmaco('lista_farmaci')
+    ### Ricerca di tutti i farmaci
+    # ricerca_farmaco('lista_farmaci')
     
-    # Ricerca di "tachipirina"
+    ### Ricerca di "tachipirina"
     # ricerca_farmaco('singolo_farmaco', query_farmaco="tachipirina")
 
-    # Estrazione di tutti i fogli illustrativi
-    with open('lista_farmaci', 'r') as infile:
+    ### Estrazione di tutti i fogli illustrativi
+    #with open('lista_farmaci', 'r') as infile:
+    #    farmaci = json.load(infile)
+
+    #for (farmaco,i) in zip(farmaci,range(len(farmaci))):
+    #    print(i)
+    #    if farmaco["url_fi"] != '':
+    #        estrai_pdf(farmaco)  
+
+    #with open('lista_farmaci_FI', 'w') as outfile:
+    #    json.dump(farmaci, fp=outfile, separators=(', ',': '), indent=4)
+
+    ### Rimozione di caratteri e testo non desiderato
+    with open('lista_farmaci_FI', 'r') as infile:
         farmaci = json.load(infile)
+    
+    for (farmaco,i) in zip(farmaci,range(len(farmaci))):
+        print(i)
+        if farmaco['fi'] != '':
+            farmaco['fi'] = stripBadText(farmaco['fi'])
 
-    for farmaco in farmaci:
-        if farmaco["url_fi"] != '':
-            estrai_pdf(farmaco["url_fi"]) 
-        # print(farmaco["codice_farmaco"]) 
-        break
-
+    with open('lista_farmaci_FI', 'w') as outfile:
+        json.dump(farmaci, fp=outfile, separators=(', ',': '), indent=4)
+    
 
 if __name__=='__main__':
     main()

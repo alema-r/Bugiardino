@@ -20,10 +20,29 @@ def curl(url, head=False):
         (out, _) = proc.communicate()
     return out
 
+def uniqAndSort(file):
+    cmd = f"sort {file} | uniq > tmp && mv tmp {file}"
+    subprocess.run(cmd, shell=True)
+    
+    
 def stripBadText(s):
+    """
+    Rimuove il testo indesiderato estratto dal PDF del foglio illustrativo.
+    
+    `s`: stringa con il contenuto PDF del foglio illustrativo si vuole modificare
+    """
     s = re.sub("Documento reso disponibile da AIFA il [0-9]{2}\/[0-9]{2}\/[0-9]{4}\\nEsula dalla competenza dell\\u2019AIFA ogni eventuale disputa concernente i diritti di propriet\\u00e0 industriale e la tutela brevettuale dei dati relativi all\\u2019AIC dei \\nmedicinali e, pertanto, l\\u2019Agenzia non pu\\u00f2 essere ritenuta responsabile in alcun modo di eventuali violazioni da parte del titolare dell'autorizzazione \\nall'immissione in commercio \(o titolare AIC\)\.", "", s)
     s = re.sub(r"\n", " ", s)
     s = re.sub(r"\r", "", s)
     s = re.sub(r"\t", "", s)
     # s = re.sub(r"\\u[0-9]{4}", "", s)
     return s.strip()
+
+def toPrologFact(funtore, atomo):
+    """
+    Restituisce un fatto in Prolog.
+
+    `funtore`: il funtore da specificare
+    `atomo`: l'atomo da inserire all'interno del funtore
+    """
+    return f'{funtore}("{atomo}").'

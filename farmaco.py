@@ -14,6 +14,7 @@ class Farmaco:
     url_fi: str
     url_rcp: str
     procedura: str
+    principio_attivo: str
     fi: str = ''
 
     def fromJSON(sm_field_codice_farmaco,
@@ -21,7 +22,8 @@ class Farmaco:
         sm_field_descrizione_ditta,
         sm_field_tipo_procedura,
         sm_field_link_fi,
-        sm_field_link_rcp):
+        sm_field_link_rcp,
+        sm_field_descrizione_atc=['']):
         """
         Crea un oggetto `Farmaco` dal JSON preso dal sito [AIFA](https://farmaci.agenziafarmaco.gov.it/bancadatifarmaci/)
         """
@@ -30,7 +32,8 @@ class Farmaco:
             sm_field_descrizione_ditta[0],
             re.sub("&amp;", "&", sm_field_link_fi[0]),
             re.sub("&amp;", "&", sm_field_link_rcp[0]), 
-            sm_field_tipo_procedura[0])
+            sm_field_tipo_procedura[0],
+            sm_field_descrizione_atc[0])
     
     def asDict(self):
         """

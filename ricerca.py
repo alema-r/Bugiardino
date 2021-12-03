@@ -2,7 +2,7 @@ import requests
 import json
 import fitz
 from farmaco import Farmaco
-from utils import curl, stripBadText
+from utils import curl
 
 
 def ricerca_farmaco(file, query_farmaco="**"):
@@ -29,9 +29,9 @@ def ricerca_farmaco(file, query_farmaco="**"):
     }
 
     params = (
-        ('fl', 'sm_field_codice_farmaco,sm_field_descrizione_farmaco,sm_field_descrizione_ditta,sm_field_tipo_procedura,sm_field_link_fi,sm_field_link_rcp'),
-        ('q', f'bundle:confezione_farmaco sm_field_descrizione_farmaco:{query_farmaco}*'),
-        ('df', 'sm_field_descrizione_farmaco'),
+        ('fl', 'sm_field_codice_farmaco,sm_field_ditta,sm_field_descrizione_ditta,sm_field_tipo_procedura,sm_field_link_fi,sm_field_link_rcp,sm_field_descrizione_atc'),
+        ('q', f'bundle:confezione_farmaco sm_field_ditta:{query_farmaco}*'),
+        ('df', 'sm_field_ditta'),
         ('wt', 'json'),
         ('rows', '150000'),
         # ('json.wrf', 'jQuery182037101282857862883_1637071501822'),
@@ -44,16 +44,18 @@ def ricerca_farmaco(file, query_farmaco="**"):
     for obj in list_obj:
         f.append(Farmaco.fromJSON(**obj))
 
-    print("Farmaci ottenuti")
     # Eliminazione dei duplicati
     f = list(set(f))
     
     for farmaco in f:
-        farmaco.checkUrls()
+        if farmaco.principio_attivo == "":
+            f.remove(farmaco)
 
     # Salvataggio output in un array json
     with open(file, 'w') as outfile:
         json.dump([farmaco.asDict() for farmaco in f], fp=outfile, separators=(', ',': '), indent=4)
+    
+    print("Farmaci ottenuti")
     
 
 def estrai_pdf(farmaco):
@@ -62,50 +64,13 @@ def estrai_pdf(farmaco):
 
     `farmaco`: il `Farmaco` di cui estrarre le informazione del foglio illustrativo 
     """
-
-    pdf = curl(farmaco["url_fi"])
     
+    pdf = curl(farmaco["url_fi"])
     try:
-        doc = fitz.open("pdf", pdf)
+        doc = fitz.open("pdf", stream=pdf)
         pages = ""
         for page in doc:
             pages += page.get_text()
         farmaco['fi'] = pages
     except RuntimeError:
-        print("runtime error")
-
-    
-def main():
-    ### Ricerca di tutti i farmaci
-    # ricerca_farmaco('lista_farmaci')
-    
-    ### Ricerca di "tachipirina"
-    # ricerca_farmaco('singolo_farmaco', query_farmaco="tachipirina")
-
-    ### Estrazione di tutti i fogli illustrativi
-    #with open('lista_farmaci', 'r') as infile:
-    #    farmaci = json.load(infile)
-
-    #for (farmaco,i) in zip(farmaci,range(len(farmaci))):
-    #    print(i)
-    #    if farmaco["url_fi"] != '':
-    #        estrai_pdf(farmaco)  
-
-    #with open('lista_farmaci_FI', 'w') as outfile:
-    #    json.dump(farmaci, fp=outfile, separators=(', ',': '), indent=4)
-
-    ### Rimozione di caratteri e testo non desiderato
-    with open('lista_farmaci_FI', 'r') as infile:
-        farmaci = json.load(infile)
-    
-    for (farmaco,i) in zip(farmaci,range(len(farmaci))):
-        print(i)
-        if farmaco['fi'] != '':
-            farmaco['fi'] = stripBadText(farmaco['fi'])
-
-    with open('lista_farmaci_FI', 'w') as outfile:
-        json.dump(farmaci, fp=outfile, separators=(', ',': '), indent=4)
-    
-
-if __name__=='__main__':
-    main()
+        farmaco['fi'] = ''

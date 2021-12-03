@@ -1,11 +1,12 @@
 [
     {
-        "codice_farmaco": "040313", 
-        "descrizione_farmaco": "TACHIPIRINA OROSOLUBILE", 
+        "codice_farmaco": "012745", 
+        "descrizione_farmaco": "TACHIPIRINA", 
         "ditta": "AZIENDE CHIMICHE RIUNITE ANGELINI FRANCESCO ACRAF SPA", 
-        "url_fi": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_040313_FI.pdf&retry=0&sys=m0b1l3", 
-        "url_rcp": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_040313_RCP.pdf&retry=0&sys=m0b1l3", 
-        "procedura": "M", 
+        "url_fi": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_012745_FI.pdf&retry=0&sys=m0b1l3", 
+        "url_rcp": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_012745_RCP.pdf&retry=0&sys=m0b1l3", 
+        "procedura": "N", 
+        "principio_attivo": "Paracetamolo", 
         "fi": ""
     }, 
     {
@@ -15,24 +16,17 @@
         "url_fi": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_034329_FI.pdf&retry=0&sys=m0b1l3", 
         "url_rcp": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_034329_RCP.pdf&retry=0&sys=m0b1l3", 
         "procedura": "M", 
+        "principio_attivo": "Paracetamolo", 
         "fi": ""
     }, 
     {
-        "codice_farmaco": "048012", 
-        "descrizione_farmaco": "TACHIPIRINAKID", 
+        "codice_farmaco": "040313", 
+        "descrizione_farmaco": "TACHIPIRINA OROSOLUBILE", 
         "ditta": "AZIENDE CHIMICHE RIUNITE ANGELINI FRANCESCO ACRAF SPA", 
-        "url_fi": "", 
-        "url_rcp": "", 
-        "procedura": "N", 
-        "fi": ""
-    }, 
-    {
-        "codice_farmaco": "012745", 
-        "descrizione_farmaco": "TACHIPIRINA", 
-        "ditta": "AZIENDE CHIMICHE RIUNITE ANGELINI FRANCESCO ACRAF SPA", 
-        "url_fi": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_012745_FI.pdf&retry=0&sys=m0b1l3", 
-        "url_rcp": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_012745_RCP.pdf&retry=0&sys=m0b1l3", 
-        "procedura": "N", 
+        "url_fi": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_040313_FI.pdf&retry=0&sys=m0b1l3", 
+        "url_rcp": "https://farmaci.agenziafarmaco.gov.it/aifa/servlet/PdfDownloadServlet?pdfFileName=footer_000219_040313_RCP.pdf&retry=0&sys=m0b1l3", 
+        "procedura": "M", 
+        "principio_attivo": "Paracetamolo", 
         "fi": ""
     }
 ]

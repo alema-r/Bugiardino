@@ -1,9 +1,6 @@
 import requests
 import json
-import fitz
 from farmaco import Farmaco
-from utils import curl
-
 
 def ricerca_farmaco(file, query_farmaco="**"):
     """
@@ -16,61 +13,42 @@ def ricerca_farmaco(file, query_farmaco="**"):
     """
 
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0',
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0',
         'Accept': '*/*',
         'Accept-Language': 'it,en-GB;q=0.7,en;q=0.3',
-        'Referer': 'https://farmaci.agenziafarmaco.gov.it/',
         'Connection': 'keep-alive',
+        'Referer': 'https://farmaci.agenziafarmaco.gov.it/',
         'Sec-Fetch-Dest': 'script',
         'Sec-Fetch-Mode': 'no-cors',
         'Sec-Fetch-Site': 'same-site',
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache',
     }
 
     params = (
-        ('fl', 'sm_field_codice_farmaco,sm_field_ditta,sm_field_descrizione_ditta,sm_field_tipo_procedura,sm_field_link_fi,sm_field_link_rcp,sm_field_descrizione_atc'),
-        ('q', f'bundle:confezione_farmaco sm_field_ditta:{query_farmaco}*'),
-        ('df', 'sm_field_ditta'),
+        ('fl', 'sm_field_codice_farmaco,sm_field_descrizione_farmaco,sm_field_descrizione_ditta,sm_field_link_fi,sm_field_descrizione_atc'),
+        ('q', f'bundle:confezione_farmaco sm_field_descrizione_farmaco:{query_farmaco}*'),
+        ('df', 'sm_field_descrizione_farmaco'),
         ('wt', 'json'),
         ('rows', '150000'),
-        # ('json.wrf', 'jQuery182037101282857862883_1637071501822'),
-        # ('_', '1637071566697'),
+        #('json.wrf', 'jQuery182037101282857862883_1637071501822'),
+        #('_', '1637071566697'),
     )
     
+    print("Richiesta HTTP in corso...")
     response = requests.get('https://www.agenziafarmaco.gov.it/services/search/select', headers=headers, params=params)
     list_obj = json.loads(response.text)["response"]["docs"]
     f = []
+
+    print("Parsing del json...")
     for obj in list_obj:
-        f.append(Farmaco.fromJSON(**obj))
+        f.append(Farmaco.fromJSON_AIFA(**obj))
 
     # Eliminazione dei duplicati
     f = list(set(f))
     
-    for farmaco in f:
-        if farmaco.principio_attivo == "":
-            f.remove(farmaco)
-
+    f[:] = [x for x in f if x.principio_attivo != '' and x.url_fi != '']
+    print("Salvataggio json...")
     # Salvataggio output in un array json
     with open(file, 'w') as outfile:
         json.dump([farmaco.asDict() for farmaco in f], fp=outfile, separators=(', ',': '), indent=4)
+    print(f"{len(f)} farmaci ottenuti")
     
-    print("Farmaci ottenuti")
-    
-
-def estrai_pdf(farmaco):
-    """
-    Estrae tutte le informazioni dal foglio illustrativo
-
-    `farmaco`: il `Farmaco` di cui estrarre le informazione del foglio illustrativo 
-    """
-    
-    pdf = curl(farmaco["url_fi"])
-    try:
-        doc = fitz.open("pdf", stream=pdf)
-        pages = ""
-        for page in doc:
-            pages += page.get_text()
-        farmaco['fi'] = pages
-    except RuntimeError:
-        farmaco['fi'] = ''

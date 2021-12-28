@@ -3,3 +3,5 @@ csv/
 lista_farmaci_FI
 .backup/
 json/
+prolog/.main.pl.swp
+prolog/.farmaci.pl.swp

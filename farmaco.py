@@ -74,7 +74,6 @@ class Farmaco:
             self.fi = re.sub("Documento reso disponibile da AIFA il [0-9]{2}\/[0-9]{2}\/[0-9]{4} Esula dalla competenza dell’AIFA ogni eventuale disputa concernente i diritti di proprietà industriale e la tutela brevettuale dei dati relativi all’AIC dei  medicinali e, pertanto, l’Agenzia non può essere ritenuta responsabile in alcun modo di eventuali violazioni da parte del titolare dell'autorizzazione  all'immissione in commercio \(o titolare AIC\)\.", "", self.fi)
             self.fi = re.sub("titolare dell’autorizzazione.*", "", self.fi)
             self.fi = self.fi.replace("'"," ")
-            self.remove_stopwords()
 
     def estrai_info(self):
         """

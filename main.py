@@ -67,7 +67,6 @@ def main():
     farmaci = leggiFarmaci("json/farmaci_FI_1.json")
     with open('prolog/farmaci.pl', 'w') as prologFile:
         for farmaco in farmaci:
-            farmaco.remove_stopwords()
             prologFile.write(farmaco.toProlog())
             prologFile.write("\n")
 

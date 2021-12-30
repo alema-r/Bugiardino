@@ -1,6 +1,5 @@
 from dataclasses import dataclass, asdict
 import re
-import json
 from utils import curl
 import fitz
 
@@ -85,12 +84,6 @@ class Farmaco:
         except IndexError:
             self.fi = ''
             print(f"Errore: {self.codice_farmaco}")
-
-    def remove_stopwords(self):
-        with open('json/stopwords.json', 'r') as jsonfile:
-            stopwords = json.load(jsonfile)
-        for w in stopwords:
-            self.fi = re.sub(f"\ {w}\ ", " ",self.fi)
 
     def toProlog(self):
         """

@@ -7,7 +7,11 @@ carica_frasi() :-
 	farmaco(NomeFarmaco,_,_,FoglioIllustrativo),
 	dividi_frasi(FoglioIllustrativo, [], [], NomeFarmaco).
 
-inizializza() :- findall(_, carica_frasi(), _).
+carica_frasi2(NomeFarmaco) :-
+	farmaco(NomeFarmaco,_,_,FoglioIllustrativo),
+	dividi_frasi(FoglioIllustrativo, [], [], NomeFarmaco).
+
+inizializza() :- findall(_,carica_frasi(),_).
 
 %controlla se la parola è l ultima della frase
 fine_frase(P) :-
@@ -20,14 +24,11 @@ aggiungi_lista(Lista, ListadiListe, [Lista|ListadiListe]).
 aggiungi_parola([], Parola, [Parola]).
 aggiungi_parola(Lista, Parola, NuovaLista) :- append(Lista, [Parola], NuovaLista).
 
-unique([]).
-unique([T|C]) :- \+ memberchk(T, C), unique(C).
-
 %divide una lista di parole in una lista di liste di frasi
 %successivamente lancia `analizza_frasi` con la lista trovata
-dividi_frasi([], [], L, NomeFarmaco) :- 
-    sort(L, L2),
-    analizza_frasi(L2, NomeFarmaco).
+dividi_frasi([], [], L, NomeFarmaco) :-
+	sort(L, L2),
+    analizza_frasi(L2, NomeFarmaco), !.
 
 dividi_frasi([Parola|C], FraseIncompleta, ListaFrasi, NomeFarmaco):-
 	(fine_frase(Parola); last([Parola|C], Parola)),
@@ -43,9 +44,8 @@ dividi_frasi([Parola|C], FraseIncompleta, ListaFrasi, NomeFarmaco):-
 analizza_frase([], _).
 analizza_frase([Parola|C], NomeFarmaco) :-
     parola_chiave(Parola),
-    \+ frase_rilevante(NomeFarmaco, [Parola|C]),
-	assertz(frase_rilevante(NomeFarmaco, [Parola|C])), !.
-	%analizza_frase([], _).
+	\+ frase_rilevante(NomeFarmaco, [Parola|C]),
+	assertz(frase_rilevante(NomeFarmaco, [Parola|C])).
 analizza_frase([_|C], NomeFarmaco) :-
 	analizza_frase(C, NomeFarmaco).
 
@@ -57,14 +57,16 @@ analizza_frasi([Frase|C], NomeFarmaco) :-
 
 %Ricerca un farmaco, data una determinata malattia/sintomo
 cerca_farmaco([], _, _, _).
+cerca_farmaco([Parola], NomeFarmaco, Frase, Indice):-
+	frase_rilevante(NomeFarmaco, Frase),
+	once(nth0(Indice, Frase, Parola)), !.
 cerca_farmaco([Parola|C], NomeFarmaco, Frase, Indice) :-
-	farmaco(NomeFarmaco,_,_,_),
 	frase_rilevante(NomeFarmaco, Frase),
 	nth0(Indice, Frase, Parola),
 	Ind is Indice + 1,
 	cerca_farmaco(C, NomeFarmaco, Frase, Ind).
 
+%La malattia/sintomo da specificare è esattamente una parola
 cerca_farmaco2(Malattia, NomeFarmaco, Frase) :-
-	farmaco(NomeFarmaco,_,_,_),
 	frase_rilevante(NomeFarmaco, Frase),
 	memberchk(Malattia, Frase).

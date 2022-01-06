@@ -5,6 +5,9 @@ from tkinter import font
 from itertools import groupby
 
 class PrologUI:
+    """
+    classe per gestire l'interfaccia grafica e il collegamento al Prolog.
+    """
     def __init__(self, prolog, root):
         self.prolog = prolog
         self.prolog_init(self.prolog)
@@ -94,7 +97,7 @@ class PrologUI:
             self.textBox.insert(END, "Frasi estratte dal foglio illustrativo:\n")
             for e in self.result[value]:
                 self.textBox.insert(END, e)
-                self.textBox.insert(END, f"\n{'- '*40}\n")
+                self.textBox.insert(END, f"\n\n")
         self.textBox.tag_add("frase", 4.0, "4.end")
         self.textBox.tag_config("frase", font=font.Font(family="Noto Sans", weight="bold"))
         self.textBox['state'] = 'disabled'

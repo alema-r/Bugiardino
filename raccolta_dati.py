@@ -31,7 +31,7 @@ def main():
 
     # estrazione del contenuto dei fogli illustrativi
     farmaci = leggiFarmaci("json/lista_farmaci.json")
-    for farmaco,i in zip(farmaci, range(len(farmaci))):
+    for i, farmaco in enumerate(farmaci):
         print(i)
         farmaco.estrai_pdf()
     farmaci[:] = [x for x in farmaci if x.fi != '']
@@ -39,7 +39,7 @@ def main():
 
     # filtraggio dei FI
     farmaci = leggiFarmaci("json/lista_farmaci_FI.json")
-    for farmaco,i in zip(farmaci, range(len(farmaci))):
+    for i, farmaco in enumerate(farmaci):
         print(i)
         farmaco.rimuoviTesto()
     farmaci[:] = [x for x in farmaci if x.fi != '']
@@ -56,7 +56,7 @@ def main():
 
     # estrazione delle informazioni cruciali dai FI
     farmaci = leggiFarmaci("json/lista_farmaci_FI_def.json")
-    for (farmaco,i) in zip(farmaci ,range(len(farmaci))):
+    for i, farmaco in enumerate(farmaci):
         farmaco.estrai_info()
         print(i)
     farmaci[:] = [x for x in farmaci if x.fi != '']

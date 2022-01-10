@@ -32,7 +32,7 @@ cd Bugiardino
 pip install -r requirements.txt
 ```
 
-Nota: è possibile effettuare nuovamente la fase di raccolta dati utilizzando il comando
+Nota: è possibile (ma non necessario per il funzionamento del programma) effettuare nuovamente la fase di raccolta dati utilizzando il comando
 ```
 python3 raccolta_dati.py
 ```

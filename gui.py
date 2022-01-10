@@ -1,8 +1,6 @@
 from pyswip import Prolog
 from tkinter import *
-from tkinter import ttk
 from tkinter import font
-from itertools import groupby
 
 class PrologUI:
     """
@@ -20,10 +18,16 @@ class PrologUI:
         self.result = {}
 
     def prolog_init(self, prolog):
+        """
+        Consulta il file prolog/main.pl e avvia la query `inizializza()`
+        """
         prolog.consult('prolog/main.pl')
         _ = list(prolog.query('inizializza()'))
 
     def tk_init(self, root):
+        """
+        Definisce la finestra per l'interfaccia grafica realizzata con Tkinter
+        """
         root.title('Bugiardino')
         root.geometry("1920x980")
         root.configure(bg = "#8BA5A5")
@@ -54,6 +58,9 @@ class PrologUI:
         root.bind("<Return>", self.search)
 
     def prolog_cerca_farmaco(self, query):
+        """
+        Avvia la query `cerca_farmaco` o `cerca_farmaco2` in base al numero di parole ricercate
+        """
         query = query.split()
         if len(query) == 1:
             q = f"cerca_farmaco2({query[0]}, Nome, Frase)"
@@ -68,11 +75,18 @@ class PrologUI:
             self.result[e['Nome']].append(e['Frase'])
 
     def prolog_info_farmaco(self, nome):
+        """
+        Restituisce le informazioni riguardanti la casa farmaceutica e il principio attivo di un determinato farmaco
+        `nome`: nome del farmaco
+        """
         q = f"farmaco('{nome}', CasaFarm, Principio, _)"
         res = list(self.prolog.query(q))
         return res[0]['CasaFarm'].replace('_', ' '), res[0]['Principio'].replace('_', ' ')
 
     def search(self, *args):
+        """
+        Avvia la ricerca dei farmaci e popola la lista dei risultati
+        """
         value = self.query.get()
         if value != '':
             self.result_list.delete(0, END)
@@ -82,6 +96,9 @@ class PrologUI:
                 self.result_list.insert(END, k.replace('_', ' '))
 
     def current_selection(self, evt):
+        """
+        In base al farmaco selezionato dalla lista dei risultati, popola il box con le frasi trovate dalla query prolog
+        """
         value=str(self.result_list.get(ANCHOR)).replace(' ', '_')
         self.textBox['state'] = 'normal'
         self.textBox.delete(1.0,END)

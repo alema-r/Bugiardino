@@ -1,10 +1,11 @@
-# :pill: Bugiardino
+# :lying_face: Bugiardino
 
 Bugiardino è un programma scritto in Python e Prolog (SWI-Prolog) che permette la ricerca di sintomi/malattie all'interno del foglio illustrativo di oltre 8000 farmaci.
 
+[Link alla presentazione](presentazione.pdf)
 ## Raccolta dati
 
-I dati relativi ai fogli illustrativi sono stati raccolti attraverso la [banca dati](https://farmaci.agenziafarmaco.gov) dell'agenzia italiano del farmaco (AIFA). 
+I dati relativi ai fogli illustrativi sono stati raccolti attraverso la [banca dati](https://farmaci.agenziafarmaco.gov.it) dell'agenzia italiana del farmaco (AIFA). 
 Nella banca dati è possibile effettuare tre diversi tipi di ricerca: per farmaco, per principio attivo e per azienda. Quella più rilevante allo scopo del progetto è la ricerca per farmaco. Attraverso diversi tentativi è emerso che per ricavare tutti i farmaci è sufficiente immettere nel campo di ricerca due asterischi **. 
 Come risposta alla richiesta si ottiene un json contenente tutti i farmaci che soddisfano i criteri di ricerca (quindi in questo caso tutti i farmaci presenti nella banca dati).
 
